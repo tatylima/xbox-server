@@ -9,3 +9,10 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+model Game{
+  id     String @id @default(uuid())
+  number Int    @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

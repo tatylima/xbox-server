@@ -1,21 +1,36 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateGameDto } from './dto/create-game.dto';
+import { UpdateGameDto } from './dto/update-game.dto';
 import { Game } from './entities/game.entity';
 
 @Injectable()
 export class GameService {
-games:Game[] = [];
+constructor(private readonly prisma: PrismaService) {}
 
+//Em findAll dizemos para aguardar uma Promise de uma array de entidades Game//
+  findAll(): Promise<Game[]> {
+    return this.prisma.game.findMany(); // < DB VIA ENTIDADE
+  }
 
-  findAll() {
-    return this.games;
+  findOne(id: string): Promise<Game> {
+    return this.prisma.game.findUnique({ where: { id }});
+  }
 
-  create(createGameDto : CreateGameDto) {
+  //e no método create para aguardar uma Promise de uma entidade Game.//
+  create(dto: CreateGameDto): Promise<Game> {
+    const data: Game = { ...dto };
 
-    const game:Game={id:'random_id',...createGameDto}:
+    return this.prisma.game.create({ data });
+  }
+  update(id: string, dto: UpdateGameDto): Promise<Game> {
+    const data: Partial<Game> = { ...dto };
 
-    this.games.push(game);
-
-    return game;
+    return this.prisma.game.update({
+      where: { id },
+      data,
+    });
   }
 }
+
+
