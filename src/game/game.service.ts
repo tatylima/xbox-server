@@ -13,15 +13,6 @@ constructor(private readonly prisma: PrismaService) {}
     return this.prisma.game.findMany(); // < DB VIA ENTIDADE
   }
 
-  async findById(id: string): Promise<Game> {
-    const record = await this.prisma.game.findUnique({ where: { id } });
-
-    if (!record) {
-      throw new NotFoundException(`Registro com o '${id}' não encontrado.`)
-    }
-
-    return record;
-  }
 
   async findOne(id: string): Promise<Game> {
     const record = await this.prisma.game.findUnique({ where: { id } });
@@ -34,43 +25,29 @@ constructor(private readonly prisma: PrismaService) {}
   }
 
   //e no método create para aguardar uma Promise de uma entidade Game.//
-  create(dto: CreateGameDto): Promise<Game> {
-    const data: Game = { ...dto };
-
-    return this.prisma.game.create({ data }).catch((error) => {
-      console.log(error);
-      return undefined;
-    });
+  create( createGameDto : CreateGameDto): Promise<Game> {
+    const data: Game = { ...createGameDto };
+    return this.prisma.game
+    .create({ data })
+    .catch(this.handleError);     
   }
 
-  handleError(error: Error) {
-    console.log(error.message);
-
-    return undefined
-;  }
-create(dto: CreateGameDto): Promise<Game> {
-  const data: Game = { ...dto };
-
-  return this.prisma.game.create({ data }).catch(this.handleError);
-}
-
-  update(id: string, dto: UpdateGameDto): Promise<Game> {
-    await this.findById(id);
+  async update(id: string, dto: UpdateGameDto): Promise<Game> {
+    await this.findOne(id);
     const data: Partial<Game> = { ...dto };
-
     return this.prisma.game.update({
       where: { id },
       data,
     });
   }
   async delete(id: string) {
-    await this.findById(id);
-    await this.prisma.game.delete({ where: { id } });
+    await this.findOne(id);
+    await this.prisma.game.delete({ where: { id },
+     });
   }
+
+handleError(error: Error) {
+  console.log(error);
+  return undefined;
 }
-
-
-function handleError(error: any, Error: ErrorConstructor) {
-  throw new Error('Function not implemented.');
 }
-
