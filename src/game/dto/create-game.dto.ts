@@ -10,3 +10,9 @@ export class CreateGameDto {
   })
   number: number;
 }
+export class CreateProductDto {
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+}

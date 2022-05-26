@@ -25,11 +25,10 @@ constructor(private readonly prisma: PrismaService) {}
   }
 
   //e no método create para aguardar uma Promise de uma entidade Game.//
-  create( createGameDto : CreateGameDto): Promise<Game> {
-    const data: Game = { ...createGameDto };
-    return this.prisma.game
-    .create({ data })
-    .catch(this.handleError);     
+  create( dto:createProductDto) :  Promise<Game> {
+    const data: Product = { ...dto };
+    return this.prisma.product.create({data}).catch(this.handleError);
+
   }
 
   async update(id: string, dto: UpdateGameDto): Promise<Game> {

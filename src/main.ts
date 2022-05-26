@@ -5,14 +5,17 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+// Validation
   app.useGlobalPipes(new ValidationPipe());
-
+// Swagger
   const config = new DocumentBuilder()
     .setTitle('XboxLive')
     .setDescription('Aplicação para gestão de jogos')
+    .setVersion('1.0.0')
     .addTag('status')
     .addTag('game')
+    .addTag('product')
+    .addTag('user')
     .build();
 
     const document = SwaggerModule.createDocument(app, config);
