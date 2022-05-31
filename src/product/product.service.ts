@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { handleError } from 'src/utils/handle-error.util';
 import { CreateProductDto } from './dto/create-Product.dto';
 import { UpdateProductDto } from './dto/update-Product.dto';
 import { Product } from './entities/Product.entity';
@@ -31,7 +32,7 @@ constructor(private readonly prisma: PrismaService) {}
       .create({
         data,
       })
-      .catch(this.handleError);
+      .catch(handleError);
   }
 
   async update(id: string, dto: UpdateProductDto): Promise<Product> {
@@ -49,8 +50,5 @@ constructor(private readonly prisma: PrismaService) {}
      });
   }
 
-handleError(error: Error) {
-  console.log(error);
-  return undefined;
-}
+
 }

@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { handleError } from 'src/utils/handle-error.util';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { Game } from './entities/game.entity';
 
 @Injectable()
-export class TableService {
+export class GameService {
 constructor(private readonly prisma: PrismaService) {}
 
 //Em findAll dizemos para aguardar uma Promise de uma array de entidades Game//
@@ -25,10 +26,13 @@ constructor(private readonly prisma: PrismaService) {}
   }
 
   //e no método create para aguardar uma Promise de uma entidade Game.//
-  create( dto:createProductDto) :  Promise<Game> {
-    const data: Product = { ...dto };
-    return this.prisma.product.create({data}).catch(this.handleError);
-
+  create(createGameDto: CreateGameDto): Promise<Game> {
+    const data: Game = { ...createGameDto };
+    return this.prisma.game
+      .create({
+        data,
+      })
+      .catch(handleError);
   }
 
   async update(id: string, dto: UpdateGameDto): Promise<Game> {
@@ -45,8 +49,6 @@ constructor(private readonly prisma: PrismaService) {}
      });
   }
 
-handleError(error: Error) {
-  console.log(error);
-  return undefined;
-}
+
+
 }

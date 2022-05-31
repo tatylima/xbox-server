@@ -1,16 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete,HttpCode,HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  UseGuards,
+} from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('product')
+@UseGuards(AuthGuard())
+@ApiBearerAuth()
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  @ApiOperation({   // < TAGS DO SWAGGER
+  @ApiOperation({
     summary: 'Criar um produto',
   })
   create(@Body() createProductDto: CreateProductDto) {
@@ -18,7 +32,7 @@ export class ProductController {
   }
 
   @Get()
-  @ApiOperation({   // < TAGS DO SWAGGER
+  @ApiOperation({
     summary: 'Listar todos os produtos',
   })
   findAll() {
@@ -26,7 +40,7 @@ export class ProductController {
   }
 
   @Get(':id')
-  @ApiOperation({   // < TAGS DO SWAGGER
+  @ApiOperation({
     summary: 'Visualizar um produto pelo ID',
   })
   findOne(@Param('id') id: string) {
@@ -34,7 +48,7 @@ export class ProductController {
   }
 
   @Patch(':id')
-  @ApiOperation({   // < TAGS DO SWAGGER
+  @ApiOperation({
     summary: 'Editar um produto pelo ID',
   })
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
@@ -43,10 +57,10 @@ export class ProductController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({    // < TAGS DO SWAGGER
+  @ApiOperation({
     summary: 'Remover um produto pelo ID',
   })
-  remove(@Param('id') id: string) {
-    return this.productService.delete(id);
+  delete(@Param('id') id: string) {
+    this.productService.delete(id);
   }
 }

@@ -1,12 +1,15 @@
-import { Body,Controller, Delete, Get,HttpCode,HttpStatus,Param,Patch,Post } from '@nestjs/common';
+import { Body,Controller, Delete, Get,HttpCode,HttpStatus,Param,Patch,Post,UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GameService } from './game.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { Game } from './entities/game.entity';
 
 
 @ApiTags('game')
+@UseGuards(AuthGuard())
+@ApiBearerAuth()
 @Controller('game')
 export class GameController {
   constructor(private readonly gameService: GameService) {}
@@ -15,49 +18,41 @@ export class GameController {
   @ApiOperation({
     summary: 'Listar todos os jogos',
   })
-@Get()
+
   findAll(): Promise<Game[]>  {
     return this.gameService.findAll();
-  }
-@Get('id')
-@ApiOperation({
-  summary: 'Visualizar todos os jogos',
-})
-  findOne(@Param('id') id: string): Promise<Game> {
-    return this.gameService.findOne(id);
   }
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Visualizar um jogo',
+    summary: 'Visualizar uma mesa',
   })
-
-  @Patch(':id')
-  @ApiOperation({
-    summary: 'Editar um jogo pelo ID',
-  })
-
-  update(@Param('id') id: string, @Body() dto: UpdateGameDto): Promise<Game> {
-    return this.gameService.update(id, dto);
+  findOne(@Param('id') id: string): Promise<Game> {
+    return this.gameService.findOne(id);
   }
 
   @Post()
   @ApiOperation({
-    summary: 'Escolher um jogo',
+    summary: 'Criar uma mesa',
   })
-
   create(@Body() dto: CreateGameDto): Promise<Game> {
     return this.gameService.create(dto);
   }
 
-@Delete(':id')
-@HttpCode(HttpStatus.NO_CONTENT)
-@ApiOperation({
-  summary: 'Remover um jogo pelo ID',
-})
+  @Patch(':id')
+  @ApiOperation({
+    summary: 'Editar uma mesa pelo ID',
+  })
+  update(@Param('id') id: string, @Body() dto: UpdateGameDto): Promise<Game> {
+    return this.gameService.update(id, dto);
+  }
 
-delete(@Param('id') id: string) {
-  this.gameService.delete(id);
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    summary: 'Remover uma mesa pelo ID',
+  })
+  delete(@Param('id') id: string) {
+    this.gameService.delete(id);
+  }
 }
-}
-
