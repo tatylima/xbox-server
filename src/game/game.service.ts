@@ -37,6 +37,7 @@ constructor(private readonly prisma: PrismaService) {}
 
   async update(id: string, dto: UpdateGameDto): Promise<Game> {
     await this.findOne(id);
+
     const data: Partial<Game> = { ...dto };
     return this.prisma.game.update({
       where: { id },

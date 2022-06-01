@@ -20,44 +20,46 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Listar todos os usuários',
   })
 
-  @UseGuards(AuthGuard())
-  @ApiBearerAuth()
+
 
   findAll() {
     return this.userService.findAll();
   }
 
   @Get(':id')
-  @ApiOperation({
-    summary: 'Visualizar um usuário pelo ID',
-  })
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Listar um usuário pelo seu ID',
+  })
+
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
 
   @Patch(':id')
-  @ApiOperation({
-    summary: 'Editar um usuário pelo ID',
-  })
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Atualizar um usuário pelo seu ID',
+  })
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({
-    summary: 'Remover um usuário pelo ID',
-  })
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    summary: 'Deletar um usuário pelo seu ID',
+  })
   remove(@Param('id') id: string) {
     return this.userService.delete(id);
   }

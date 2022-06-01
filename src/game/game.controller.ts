@@ -25,7 +25,7 @@ export class GameController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Visualizar uma mesa',
+    summary: 'Visualizar um jogo pelo ID',
   })
   findOne(@Param('id') id: string): Promise<Game> {
     return this.gameService.findOne(id);
@@ -33,7 +33,7 @@ export class GameController {
 
   @Post()
   @ApiOperation({
-    summary: 'Criar uma mesa',
+    summary: 'Comprar um jogo',
   })
   create(@Body() dto: CreateGameDto): Promise<Game> {
     return this.gameService.create(dto);
@@ -41,7 +41,7 @@ export class GameController {
 
   @Patch(':id')
   @ApiOperation({
-    summary: 'Editar uma mesa pelo ID',
+    summary: 'Editar um jogo pelo ID',
   })
   update(@Param('id') id: string, @Body() dto: UpdateGameDto): Promise<Game> {
     return this.gameService.update(id, dto);
@@ -50,9 +50,9 @@ export class GameController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
-    summary: 'Remover uma mesa pelo ID',
+    summary: 'Remover um jogo pelo ID',
   })
   delete(@Param('id') id: string) {
-    this.gameService.delete(id);
+    return this.gameService.delete(id);
   }
 }
