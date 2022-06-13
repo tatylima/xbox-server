@@ -1,10 +1,10 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+import { OrderService } from './order.service';
+import { CreateOrderDto } from './dto/create-order.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 import { LoggedUser } from 'src/auth/logged-user.decorator';
 import { User } from 'src/user/entities/user.entity';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { OrderService } from './order.service';
 
 @ApiTags('order')
 @UseGuards(AuthGuard())
@@ -31,7 +31,7 @@ export class OrderController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Visualizar um pedido pelo ID',
+    summary: 'Listar um pedido pelo seu ID',
   })
   findOne(@Param('id') id: string) {
     return this.orderService.findOne(id);
