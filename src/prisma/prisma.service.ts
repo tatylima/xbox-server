@@ -3,6 +3,8 @@ import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
+  genre: any;
+  profile: any;
 // Garante que o banco está conectado
   async onModuleInit() {
     await this.$connect();

@@ -2,57 +2,58 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './entities/user.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { handleError } from 'src/utils/handle-error.util';
 
+
 @Injectable()
 export class UserService {
+  isAdmin: any;
+  constructor(private readonly prisma: PrismaService) {}
+
   private userSelect = {
     id: true,
-    nickname: true,
     name: true,
-    password: false,
+    email: true,
     image: true,
+    password: false,
+    cpf: true,
+    isAdmin: true,
     createdAt: true,
     updatedAt: true,
   };
 
-  constructor(private readonly prisma: PrismaService) {}
-
-  findAll(): Promise<User[]> {
-    return this.prisma.user.findMany({
+  async findAll(){
+    return await this.prisma.user.findMany({
       select: this.userSelect,
     });
   }
 
-  async findOne(id: string): Promise<User> {
-    const record = await this.prisma.user.findUnique({
+  async findById(id: string){
+    const data = await this.prisma.user.findUnique({
       where: { id },
       select: this.userSelect,
     });
-
-    if (!record) {
-      throw new NotFoundException(`Registro com o id '${id}' não encontrado`);
+    if (!data) {
+      throw new NotFoundException(`Registro com o ID '${id}' não encontrado.`);
     }
-
-    return record;
+    return data;
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    if (createUserDto.password != createUserDto.confirmPassword) {
-      throw new BadRequestException('As senhas informadas não conferem');
+  async create(dto: CreateUserDto) {
+    if (dto.password != dto.confirmPassword) {
+      throw new BadRequestException('As senhas informadas não são iguais.');
     }
-
-    delete createUserDto.confirmPassword;
-
+    delete dto.confirmPassword;
     const data: User = {
-      ...createUserDto,
-      password: await bcrypt.hash(createUserDto.password, 10),
+      ...dto,
+      password: await bcrypt.hash(dto.password, 10),
     };
     return this.prisma.user
       .create({
@@ -62,34 +63,39 @@ export class UserService {
       .catch(handleError);
   }
 
-  async update(id: string, dto: UpdateUserDto): Promise<User> {
-    await this.findOne(id);
+  async update(user: User, id: string, dto: UpdateUserDto){
+    if (this.isAdmin) {
+      await this.findById(id);
 
-    if (dto.password) {
-      if (dto.password != dto.confirmPassword) {
-        throw new BadRequestException('As senhas informadas não conferem');
+      if (dto.cpf) {
+        throw new BadRequestException('Não é possível alterar o CPF do usuário');
       }
+      if (dto.password) {
+        if (dto.password != dto.confirmPassword) {
+          throw new BadRequestException('As senhas informadas não são iguais.');
+        }
+      }
+      delete dto.confirmPassword;
+      const data: Partial<User> = { ...dto };
+      if (data.password) {
+        data.password = await bcrypt.hash(data.password, 10);
+      }
+      return this.prisma.user.update({
+        where: { id },
+        data,
+        select: this.userSelect,
+      });
+
+    }else{
+      throw new UnauthorizedException(
+        'Usuário não autorizado. Contate o Administrador!',
+      );
     }
 
-    delete dto.confirmPassword;
-
-    const data: Partial<User> = { ...dto };
-
-    if (data.password) {
-      data.password = await bcrypt.hash(data.password, 10);
-    }
-
-    return this.prisma.user.update({
-      data,
-      where: { id },
-      select: this.userSelect,
-    });
   }
 
   async delete(id: string) {
-    await this.findOne(id);
-    await this.prisma.user.delete({
-      where: { id },
-    });
+    await this.findById(id);
+    await this.prisma.user.delete({ where: { id:id } });
   }
 }

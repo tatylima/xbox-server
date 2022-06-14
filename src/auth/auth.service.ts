@@ -1,8 +1,7 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable,NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { LoginResponseDto } from './dto/login-response.dto';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()
@@ -11,27 +10,28 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(loginDto: LoginDto): Promise<LoginResponseDto> {
-    const { nickname, password } = loginDto;
+  async login(loginDto: LoginDto) {
+    const { email, password } = loginDto;
 
-    // Procura e checa se o user existe, usando o nickname
-    const user = await this.prisma.user.findUnique({ where: { nickname } });
+    // Procura e checa se o user existe, usando o email
+    const user = await this.prisma.user.findUnique({ where: { email },
+     });
 
     if (!user) {
-      throw new UnauthorizedException('Usuário e/ou senha inválidos');
+      throw new NotFoundException('Usuário não encontrado');
     }
 
     // Valida se a senha informada é correta
-    const isHashValid = await bcrypt.compare(password, user.password);
+    const validHash = await bcrypt.compare(password /* SENHA DO DTO */, user.password /*SENHA DO BANCO  */ );
 
-    if (!isHashValid) {
-      throw new UnauthorizedException('Usuário e/ou senha inválidos');
+    if(validHash === false){
+      throw new UnauthorizedException('Credenciais inválidas')
     }
 
     delete user.password;
 
     return {
-      token: this.jwtService.sign({ nickname }),
+      token: this.jwtService.sign({ email }),
       user,
     };
   }

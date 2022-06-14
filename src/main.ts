@@ -1,32 +1,35 @@
-import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule,{
-    cors: true, // < Habilitando CORS no Nest
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    cors: true,
   });
-// Validation
+
+  app.set('trust proxy', 1);
+
   app.useGlobalPipes(new ValidationPipe());
-// Swagger
+
   const config = new DocumentBuilder()
-    .setTitle('XboxLive')
-    .setDescription('Aplicação para gestão de jogos')
+    .setTitle('Xbox Live ')
+    .setDescription('Backend do projeto Xbox Live')
     .setVersion('1.0.0')
     .addTag('status')
     .addTag('auth')
-    .addTag('game')
-    .addTag('product')
     .addTag('user')
-    .addTag('order')
-    .addTag('auth')
+    .addTag('profile')
+    .addTag('homepage')
+    .addTag('game')
+    .addTag('genre')
     .addBearerAuth()
     .build();
 
-    const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api', app, document);
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
-  await app.listen(3333);;
+  await app.listen(process.env.PORT || 4444, '0.0.0.0');
 }
 bootstrap();

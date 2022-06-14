@@ -1,20 +1,37 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsUrl, Matches, MinLength } from 'class-validator';
+import {IsEmail,
+  IsNotEmpty,
+  IsString,
+  IsUrl,
+  Matches,
+  MinLength,
+} from 'class-validator'
 
 export class CreateUserDto {
   @IsString()
+  @IsNotEmpty()
   @ApiProperty({
     description: 'Nome de usuário. Utilizado no login. Deve ser único',
-    example: 'paulosalvatore',
-  })
-  nickname: string;
-
-  @IsString()
-  @ApiProperty({
-    description: 'Nome do usuário. Apenas para exibição',
-    example: 'Paulo Salvatore',
+    example: 'tatianagandra',
   })
   name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'CPF do usuario',
+    example: '123.456.777-78',
+  })
+  cpf: string;
+
+  @IsEmail()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'E-mail para cadastro do usuário.',
+    example: 'tatianagandra78@gmail.com',
+  })
+  email: string;
 
   @IsString()
   @MinLength(6)
@@ -39,4 +56,6 @@ export class CreateUserDto {
     example: 'https://avatars.githubusercontent.com/u/7906171',
   })
   image: string;
+  isAdmin: boolean;
 }
+

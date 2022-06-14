@@ -1,7 +1,9 @@
 export class User {
   id?: string;
-  nickname: string;
+  isAdmin?: boolean;
   name: string;
+  cpf: string;
+  email: string;
   password: string;
   image: string;
   createdAt?: Date;

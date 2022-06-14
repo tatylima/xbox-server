@@ -3,8 +3,9 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';;
-
+import { AuthGuard } from '@nestjs/passport';
+import { User } from './entities/user.entity';
+import { LoggedUser } from 'src/auth/logged-user.decorator';
 
 @ApiTags('user')
 @Controller('user')
@@ -26,8 +27,6 @@ export class UserController {
     summary: 'Listar todos os usuários',
   })
 
-
-
   findAll() {
     return this.userService.findAll();
   }
@@ -39,8 +38,8 @@ export class UserController {
     summary: 'Listar um usuário pelo seu ID',
   })
 
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
+  findById(@Param('id') id: string) {
+    return this.userService.findById(id);
   }
 
   @Patch(':id')
@@ -49,8 +48,8 @@ export class UserController {
   @ApiOperation({
     summary: 'Atualizar um usuário pelo seu ID',
   })
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  update(@LoggedUser() user: User,@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(user, id, updateUserDto);
   }
 
   @Delete(':id')
@@ -60,7 +59,7 @@ export class UserController {
   @ApiOperation({
     summary: 'Deletar um usuário pelo seu ID',
   })
-  remove(@Param('id') id: string) {
+  delete(@Param('id') id: string) {
     return this.userService.delete(id);
   }
 }

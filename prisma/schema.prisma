@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,60 +11,73 @@ datasource db {
 }
 
 model Game {
-  id     String @id @default(uuid())
-  number Int    @unique
+  id                 String @id @default(uuid())
+  title              String
+  description        String
+  price              Float
+  year               Int
+  TrailerYouTubeUrl  String
+  GameplayYouTubeUrl String
+  ImdbScore          Int
+  image              String
+
+  genre    Genre[]
+  profile  Profile[]
+  favgames FavGames[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  orders Order[]
+
   @@map("game")
 }
 
-model Product {
-  id          String @id @default(uuid())
-  name        String @unique
-  description String
-  image       String
-  price       Float
+model Genre {
+  id    String @id @default(uuid())
+  genre String @unique
+
+  game Game[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  ordersProducts OrderProduct[]
-  @@map("product")
+
+  @@map("genre")
+}
+
+model Profile {
+  id    String @id @default(uuid())
+  name  String
+  image String
+
+  favgames FavGames?
+  game     Game[]
+  user     User       @relation(fields: [userId], references: [id])
+  userId   String     @map("user_id")
+
+  @@map("profile")
 }
 
 model User {
-  id        String   @id @default(uuid())
-  nickname  String   @unique
-  name      String
-  password  String
-  image     String
-  orders    Order[]
+  id       String  @id @default(uuid())
+  name     String
+  cpf      String  @unique
+  email    String  @unique
+  password String
+  image    String
+  isAdmin  Boolean @default(false) @map("is_admin")
+
+  profile Profile[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
   @@map("user")
 }
 
-model Order {
+model FavGames {
   id String @id @default(uuid())
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @map("user_id")
-  game   Game  @relation(fields: [gameId], references: [id])
-  gameId String @map("game_id")
-  products  OrderProduct[]
-  createdAt DateTime       @default(now()) @map("created_at")
-  updatedAt DateTime       @updatedAt @map("updated_at")
-  @@map("order")
-}
 
-model OrderProduct {
-  id String @id @default(uuid())
-  order   Order  @relation(fields: [orderId], references: [id])
-  orderId String
-  product   Product @relation(fields: [productId], references: [id])
-  productId String
-  quantity    Int
-  description String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  @@unique([orderId, productId])
-  @@map("order_product")
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String  @map("profile_id") @unique
+
+  game Game[]
 }
