@@ -5,7 +5,7 @@ export class CreateGameDto{
   @IsString()
   @ApiProperty({
     description: 'Nome do jogo',
-    example: 'Forza 7',
+    example: 'Senhor dos aneis',
   })
   title: string;
 
@@ -18,7 +18,7 @@ export class CreateGameDto{
   @IsString()
   @ApiProperty({
     description: 'Gênero do jogo',
-    example: 'Corrida',
+    example: 'Fantasia',
   })
   genreName: string;
 
@@ -36,21 +36,21 @@ export class CreateGameDto{
   @IsPositive()
   @ApiProperty({
     description: 'Ano de lançamento do jogo',
-    example: '2019',
+    example: '2017',
   })
   year: number;
 
   @IsUrl()
   @ApiProperty({
     description: 'Link do trailer do jogo',
-    example: 'https://www.youtube.com/watch?v=nmwA7JkXlr8',
+    example: 'https://www.youtube.com/watch?v=l1x2SB3--gA',
   })
   TrailerYouTubeUrl: string;
 
   @IsUrl()
   @ApiProperty({
     description: 'Link de gameplay do jogo',
-    example: 'https://www.youtube.com/watch?v=WxTLf3Ht-Os',
+    example: 'https://www.youtube.com/watch?v=l1x2SB3--gA',
   })
   GameplayYouTubeUrl: string;
 
