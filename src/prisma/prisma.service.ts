@@ -3,9 +3,8 @@ import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
-  genre: any;
-  profile: any;
-  async onModuleInit() {
+
+  async onModuleInit(): Promise<void> {
     await this.$connect();
   }
 
