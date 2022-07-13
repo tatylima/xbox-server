@@ -1,5 +1,6 @@
+/* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsPositive, IsString, IsUrl } from 'class-validator';
+import {  IsNumber, IsPositive, IsString, IsUrl,IsUUID } from 'class-validator';
 
 export class CreateGameDto{
   @IsString()
@@ -16,6 +17,7 @@ export class CreateGameDto{
   description: string;
 
   @IsString()
+  @IsUUID()
   @ApiProperty({
     description: 'Gênero do jogo',
     example: 'Fantasia',
