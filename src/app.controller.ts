@@ -1,4 +1,5 @@
-import { Controller, Get,Req } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import {Controller,Get,Req} from '@nestjs/common';
 import { ApiOperation,ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { Request } from 'express';
