@@ -21,11 +21,23 @@
 </p>
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+  
+## Xbox-Game
 
 ## Description
 Projeto Desenvolvido em conjunto com a turma C013 da Blue EdTech. Desenvolvemos ele com o intuito de aprender os conceitos para trabalhar com Nest.js + Prisma.
 Trabalhamos também com conceitos de autenticação, filtragem de buscas, documentação de projetos e bancos de dados relacionais.
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+
+## Pré-requesitos
+
+Node com versão superior ou igual que 16.15.0 - Node Download
+
+NPM com versão superior ou igual que 8.5.5 - Npm Download
+
+Nest.js com versão superior ou igual que 8.5.5 - Nest Download
+
+PostgreSQL com versão superior ou igual que 8.2.6 - PostgreSQL Download
 
 ## Installation
 
