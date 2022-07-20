@@ -23,7 +23,8 @@
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
-
+Projeto Desenvolvido em conjunto com a turma C013 da Blue EdTech. Desenvolvemos ele com o intuito de aprender os conceitos para trabalhar com Nest.js + Prisma.
+Trabalhamos também com conceitos de autenticação, filtragem de buscas, documentação de projetos e bancos de dados relacionais.
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Installation
